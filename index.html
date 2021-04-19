@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Title</title>
+		<title>IO</title>
 
 		<link rel="stylesheet" href="reveal.js/dist/reset.css">
 		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
@@ -18,8 +18,107 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<h1>Random Forests</h1>
+					<h1>Input/Output</h1>
 					<p>Bastian Schiffthaler</p>
+				</section>
+				<section>
+					<section>
+						<p>Output streams</p>
+						<ul>
+							<li class="fragment"> <code class="monokai-red">stdin: &0&nbsp;</code> Stream for input data</li>
+							<li class="fragment"> <code class="monokai-red">stdout: &1</code> Stream for output data</li>
+							<li class="fragment"> <code class="monokai-red">stderr: &2</code> Stream for error messages</li>
+							<li class="fragment"> <code class="monokai-red">[*]: &3+&nbsp;&nbsp;</code> Streams for any other purpose</li>
+						</ul>
+					</section>
+					<section>
+						<p>Example streams: fully interactive, split streams</p>
+						<img class="stretch" data-src="img/io_1.png">
+					</section>
+					<section>
+						<p>Example streams: fully interactive, only one terminal</p>
+						<img class="stretch" data-src="img/io_2.png">
+					</section>
+					<section>
+						<p>Example streams: only output interactive, only one terminal</p>
+						<img class="stretch" data-src="img/io_3.png">
+					</section>
+					<section>
+						<p>Example streams: non-interactive</p>
+						<img class="stretch" data-src="img/io_4.png">
+					</section>
+					<section>
+						<p>Redirecting streams</p>
+						<p>Operators:</p>
+						<ul>
+							<li class="fragment"><code class="monokai-green">&gt;</code> Write to file/stream</li>
+							<li class="fragment"><code class="monokai-green">&gt;&gt;</code> Append to file/stream</li>
+							<li class="fragment"><code class="monokai-green">&lt;</code> Read from file/stream</li>
+						</ul>
+					</section>
+					<section>
+						<p>Examples of redirecting stdin/stdout</p>
+						<pre><code data-trim data-noescape class="bash">
+							# Write stdout to terminal
+							echo "Hello"
+							# Read from stdin. Type some lines. [Ctrl + d] to exit
+							cat
+							# Redirect stdin from a file
+							cat < hello.txt
+							# Redirect stdout to a file, overwriting it if it exists
+							echo "Hello" > hello.txt
+							cat < hello.txt
+							# Redirect stdout to a file, appending to it if it exists
+							echo "World" >> hello.txt
+							cat < hello.txt
+						</code></pre>
+					</section>
+					<section>
+						<p>Redirecting stderr</p>
+						<pre><code data-trim data-noescape class="bash">
+						# Print a message directory to stderr
+						echo "[Error]: You did something wrong" >&2
+
+						# Start a program redirecting stdout to stderr
+						some_program arg1 arg2 >&2
+
+						# Start a program redirecting stderr to stdout
+						some_program arg1 arg2 2>&1
+						</code></pre>
+					</section>
+					<section>
+					<p>Special operator: <code class="monokai-red">&&gt;</code> </p>
+					<p>Redirects both stdout and stderr</p>
+					<pre><code data-trim data-noescape class="bash">
+					# Redirect all streams
+
+					some_program &> all_output.log
+					</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>Pipes</p>
+						<ul>
+							<li class="fragment">Pipes allow you to redirect the output of one program as the input to another</li>
+							<li class="fragment">Programs are chained with the <code class="monokai-red">|</code> operator</li>
+						</ul>
+						<div class="fragment">
+						<pre><code data-trim data-noescape class="bash">
+						program_x | program_y | ... | program_n
+						</code></pre>
+					</div>
+					</section>
+					<section>
+						<p>Example - Count how many fasta files are in a directory</p>
+						<pre><code data-trim data-noescape class="bash">
+						ls "*.fa" | wc -l
+						</code></pre>
+						<ul>
+							<li class="fragment"> <code class="monokai-red">ls&nbsp; "*.fa"</code>: List files ending with ".fa"</li>
+							<li class="fragment"> <code class="monokai-red">wc&nbsp; -l&nbsp;&nbsp;&nbsp;&nbsp;</code>: Count number of lines</li>
+						</ul>
+					</section>
 				</section>
 			</div>
 		</div>
@@ -35,8 +134,8 @@
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
-				width: 1600,
-				height: 1280,
+				width: 1280,
+				height: 720,
 
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ]
